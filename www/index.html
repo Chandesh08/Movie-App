@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#2196f3">
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: gap:">
+    <title>Movie</title>
+    <link rel="stylesheet" href="css/framework7.bundle.min.css">
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="apple-touch-icon" href="img/f7-icon-square.png">
+    <link rel="icon" href="img/f7-icon.png">
+    <style>
+        :root {
+            --f7-theme-color: #DAA520;
+            --f7-theme-color-rgb: 218, 165, 32;
+            --f7-theme-color-shade: #b68a1b;
+            --f7-theme-color-tint: #e3b440;
+        }
+
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 50%;
+        }
+
+        .wavy {
+            position: relative;
+            -webkit-box-reflect: below -12px linear-gradient(transparent, rgba(0, 0, 0, 0.2));
+        }
+
+        .wavy span {
+            position: relative;
+            display: inline-block;
+            font-size: 1.4em;
+            text-transform: uppercase;
+            color: whitesmoke;
+            animation: animate 1s ease-in-out infinite;
+            animation-delay: calc(0.1s * var(--i));
+        }
+
+        @media {
+            .wavy span {
+                font-size: 1.3em;
+            }
+        }
+
+        @keyframes animate {
+            0% {
+                transform: translateY(0px);
+            }
+
+            20% {
+                transform: translateY(-20px);
+            }
+
+            40%,
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .searchbar1 {
+            background: #2f3640;
+            height: 25px;
+            border-radius: 25px;
+            padding: 10px;
+        }
+
+        #smovie {
+            border: none;
+            background: none;
+            outline: none;
+            float: left;
+            padding: 0;
+            color: white;
+            font-size: 16px;
+            transition: 0.4s;
+            line-height: 25px;
+            width: 100%;
+        }
+
+        .button {
+            background-color: #DAA520;
+        }
+
+        #cover {
+            position: fixed;
+            height: 100%;
+            width: 100%;
+            top: 0;
+            left: 0;
+            background-image: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.6979166666666667) 0%, rgba(0, 0, 0, 0.6951155462184874) 50%), url(img/white.gif);
+            background-size: cover;
+            z-index: 9999;
+        }
+
+        #splash {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 17%;
+            width: 90%;
+            margin: auto;
+            animation-name: example;
+            animation-duration: 1.5s;
+        }
+
+        @keyframes example {
+            from {
+                bottom: 120%;
+            }
+
+            to {
+                bottom: 17%;
+            }
+        }
+
+        #splash1 {
+            position: absolute;
+            top: 65%;
+            left: 10%;
+            right: 10%;
+            bottom: 0;
+            margin: auto;
+            text-align: center;
+            color: white;
+            opacity: 1;
+            animation-name: example1;
+            animation-duration: 1.5s;
+        }
+
+        @keyframes example1 {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+
+        .rating {
+            float: left;
+        }
+
+        /* :not(:checked) is a filter, so that browsers that don’t support :checked don’t 
+   follow these rules. Every browser that supports :checked also supports :not(), so
+   it doesn’t make the test unnecessarily selective */
+        .rating:not(:checked)>input {
+            position: absolute;
+            top: -9999px;
+            clip: rect(0, 0, 0, 0);
+        }
+
+        .rating:not(:checked)>label {
+            float: right;
+            width: 1em;
+            padding: 0 .1em;
+            overflow: hidden;
+            white-space: nowrap;
+            cursor: pointer;
+            font-size: 200%;
+            line-height: 1.2;
+            color: #ddd;
+            text-shadow: 1px 1px #bbb, 2px 2px #666, .1em .1em .2em rgba(0, 0, 0, .5);
+        }
+
+        .rating:not(:checked)>label:before {
+            content: '★ ';
+        }
+
+        .rating>input:checked~label {
+            color: #f70;
+            text-shadow: 1px 1px #c60, 2px 2px #940, .1em .1em .2em rgba(0, 0, 0, .5);
+        }
+
+        .rating:not(:checked)>label:hover,
+        .rating:not(:checked)>label:hover~label {
+            color: gold;
+            text-shadow: 1px 1px goldenrod, 2px 2px #B57340, .1em .1em .2em rgba(0, 0, 0, .5);
+        }
+
+        .rating>input:checked+label:hover,
+        .rating>input:checked+label:hover~label,
+        .rating>input:checked~label:hover,
+        .rating>input:checked~label:hover~label,
+        .rating>label:hover~input:checked~label {
+            color: #ea0;
+            text-shadow: 1px 1px goldenrod, 2px 2px #B57340, .1em .1em .2em rgba(0, 0, 0, .5);
+        }
+
+        .rating>label:active {
+            position: relative;
+            top: 2px;
+            left: 2px;
+        }
+
+        /* end of Lea's code */
+
+        /*
+ * Clearfix from html5 boilerplate
+ */
+
+        .clearfix:before,
+        .clearfix:after {
+            content: " ";
+            /* 1 */
+            display: table;
+            /* 2 */
+        }
+
+        .clearfix:after {
+            clear: both;
+        }
+
+        /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+
+        .clearfix {
+            *zoom: 1;
+        }
+
+        /* my stuff */
+        #status,
+        button {
+            margin: 20px 0;
+        }
+
+        .custom-accordion {
+            color: white;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .custom-accordion .accordion-item-toggle {
+            padding: 0px 15px;
+            height: 44px;
+            line-height: 44px;
+            font-size: 17px;
+            color: #fff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            cursor: pointer;
+        }
+
+        .custom-accordion .accordion-item-toggle:active {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .custom-accordion .accordion-item-toggle span {
+            display: inline-block;
+            margin-left: 15px;
+        }
+
+        .custom-accordion .accordion-item:last-child .accordion-item-toggle {
+            border-bottom: none;
+        }
+
+        .custom-accordion .icon-plus,
+        .custom-accordion .icon-minus {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            border: 1px solid #fff;
+            border-radius: 100%;
+            line-height: 20px;
+            text-align: center;
+        }
+
+        .custom-accordion .icon-minus {
+            display: none;
+        }
+
+        .custom-accordion .accordion-item-opened .icon-minus {
+            display: inline-block;
+        }
+
+        .custom-accordion .accordion-item-opened .icon-plus {
+            display: none;
+        }
+
+        .custom-accordion .accordion-item-content {
+            padding: 0px 15px;
+        }
+
+        #post {
+
+            animation: mymove 3s infinite;
+        }
+
+        @keyframes mymove {
+            50% {
+                box-shadow: 0 6px 10px 0 rgba(255, 255, 255, 0.2), 0 8px 22px 0 rgba(255, 255, 255, 0.19);
+            }
+        }
+
+        .glow {
+  color: #DAA520;
+  
+}
+    </style>
+</head>
+
+<body class='theme-dark'>
+    <div id="cover">
+        <img id="splash" src="img/f7-icon.png">
+        <h3 id="splash1">Movie Hybrid Mobile Application Design by <span style='color: #DAA520;'>CHANDESH LILLMOND</span></h3>
+    </div>
+
+    <div id="app">
+        <div class="panel panel-left panel-cover panel-resizable panel-init">
+            <div class="page">
+                <div class="page-content theme-dark" style="background-image: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.4542191876750701) 0%, rgba(0, 0, 0, 0.44861694677871145) 50%), url(img/blue3.gif); background-size: cover;">
+                    <div class="block">
+                        <img class="center" src="img/movie.png">
+                    </div>
+                    <div class="block">
+
+                        <h2 style="color: #DAA520;">Navigation Menu</h2>
+
+
+                    </div>
+                    <div class="list links-list" style="background-color: transparent;">
+                        <ul style="background-color: transparent;">
+                            <li id="hi">
+                                <a href="/appbar/" class="panel-close">Watched Items</a>
+                            </li>
+                            <li>
+                                <a href="/toast/" class="panel-close">Favorite Items</a>
+                            </li>
+                            <li>
+                                <a href="/contacts-list/" class="panel-close">Feedback Form</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div class="block">
+
+                        <h2 style="color: #DAA520;">About</h2>
+
+
+                    </div>
+                    <div class="block">
+                        <h3>OMDb API</h3>
+                        <h4 style="opacity: 0.6;">The Open Movie Database</h4>
+                        <p style="text-align: justify;">The OMDb API is a RESTful web service to obtain movie information, all content and images on the site are contributed and maintained by its users.</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="view view-main view-init safe-areas" data-master-detail-breakpoint="800" data-url="/">
+            <div class="page page-home">
+                <div class="navbar">
+                    <div class="navbar-bg"></div>
+                    <div class="navbar-inner">
+
+                        <div class="title">Movies</div>
+                        <div class="right">
+                            <a href="#" class="link icon-only panel-open" data-panel="left">
+                                <i class="icon f7-icons if-not-md">menu</i>
+                                <i class="icon material-icons md-only">menu</i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="page-content" id="main" style="background-image: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.4542191876750701) 0%, rgba(0, 0, 0, 0.44861694677871145) 50%), url(img/blue1.gif); background-size: cover;">
+
+
+                    <div class="block">
+                        <img class="center" src="img/f7-icon.png">
+                    </div>
+
+                    <div class="block">
+                        <div class="center">
+                            <h2 style="color: #DAA520;">Search Movies</h2>
+                        </div>
+
+                    </div>
+
+                    <div class="block">
+                        <div class="searchbar1">
+                            <input id="smovie" type="search" placeholder="Search for movies">
+                        </div>
+                        <br />
+                        <div class="row">
+
+                            <div class="col-33"></div>
+                            <div class="col-33"> <a onclick="valid()" class="col button button-large button-fill button-round color-red">Search</a></div>
+                            <div class="col-33"></div>
+                        </div>
+
+
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="popup demo-popup">
+                <div class="page" data-name="1detail">
+                    <div class="navbar">
+                        <div class="navbar-bg"></div>
+                        <div class="navbar-inner">
+                            <div class="title">Details</div>
+                            <div class="right"><a href="#" class="link popup-close">Close</a></div>
+                        </div>
+                    </div>
+                    <div class="page-content" id="back">
+                        <div class="block">
+                            <div id="ti">
+                            </div>
+                        </div>
+                        <div>
+
+                            <div class="block">
+                                <div id="dd">
+                                </div>
+
+                                <div class="popover popover-links">
+                                    <div class="popover-inner">
+                                        <div class="list">
+                                            <ul id="ls">
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="list simple-list" id="logged" style="background-color: transparent;">
+                                    <ul style="background-color: transparent;">
+                                        <li>
+                                            <span>Watched</span>
+                                            <label class="toggle toggle-init color-yellow">
+                                                <input id="toggle-dark" name="demo-checkbox-movies" type="checkbox" />
+                                                <span class="toggle-icon"></span>
+                                            </label>
+                                        </li>
+                                        <li id="green">
+                                            <span>Favorite</span>
+                                            <label class="toggle toggle-init color-yellow">
+                                                <input id="toggle-green" name="mm" type="checkbox" />
+                                                <span class="toggle-icon"></span>
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="block">
+                                    <form id="ratingForm">
+                                        <fieldset class="rating">
+                                            <legend>Personal Rating:</legend>
+                                            <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="Rocks!">5 stars</label>
+                                            <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="Pretty good">4 stars</label>
+                                            <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="Meh">3 stars</label>
+                                            <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="Kinda bad">2 stars</label>
+                                            <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="Sucks big time">1 star</label>
+                                        </fieldset>
+                                        <div class="clearfix"></div>
+                                        <br />
+                                        <div class="row">
+                                            <!-- Each "cell" has col-[width in percents] class -->
+                                            <div class="col-50"><button class="col button button-fill button-round color-red submit clearfix">Submit Rating</button></div>
+
+                                            <div class="col-50"></div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <div class="popup second-popup">
+                <div class="page" data-name="1detail">
+                    <div class="navbar">
+                        <div class="navbar-bg"></div>
+                        <div class="navbar-inner">
+                            <div class="title">Episodes</div>
+                            <div class="right"><a href="#" class="link popup-close">Close</a></div>
+                        </div>
+                    </div>
+                    <div class="page-content" id="back1">
+                        <div class="block">
+
+                            <div id="sea"></div>
+                            <div class="block accordion-list custom-accordion">
+                                <div id="ep"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <div class="popup third-popup">
+                <div class="page" data-name="1detail">
+                    <div class="navbar">
+                        <div class="navbar-bg"></div>
+                        <div class="navbar-inner">
+                            <div class="title">Episode Details</div>
+                            <div class="right"><a href="#" class="link popup-close">Close</a></div>
+                        </div>
+                    </div>
+                    <div class="page-content" id="back2">
+                        <div class="block">
+
+                            <div id="e"></div>
+                            <div class="block accordion-list custom-accordion">
+                                <div id="p"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+
+        </div>
+    </div>
+    <script src="js/framework7.bundle.min.js"></script>
+    <script src="js/routes.js"></script>
+    <script src="js/app.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
+
+    <script>
+        var $$ = Dom7;
+        setInterval(splashscreen, 4000);
+        setInterval(theme, 4000);
+
+        function theme() {
+            document.getElementById("main").setAttribute('style', 'background-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6979166666666667) 0%, rgba(0,0,0,0.6951155462184874) 50%), url(img/' + (Math.floor(Math.random() * 7) + 1) + '.jpg); background-size: cover;');
+        }
+
+        function splashscreen() {
+            jQuery("#cover").css({
+                'display': 'none'
+            });
+        }
+        var db = openDatabase("movieDB", '1.0', "My WebSQL Database", 2 * 1024 * 1024);
+
+
+        db.transaction(function(tx) {
+            tx.executeSql("CREATE TABLE IF NOT EXISTS watched(id INT AUTOINCREAMENT, title TEXT, mid TEXT, year INT, poster TEXT, ratings INT)");
+            tx.executeSql("CREATE TABLE IF NOT EXISTS bookmarks(id INT AUTOINCREAMENT, title TEXT, mid TEXT, year INT, poster TEXT)");
+        });
+
+        $$('#toggle-dark').on('change', function() {
+            if ($$('#toggle-dark').prop('checked') == true) {
+                $$('.open-preloader');
+                app.dialog.preloader('Moving to Watched List');
+                setTimeout(function() {
+                    app.dialog.close();
+                }, 3000);
+                db.transaction(function(tx) {
+                    var title = document.getElementById('mti').innerHTML;
+                    var id = document.getElementById('mid').innerHTML;
+                    var year = document.getElementById('mye').innerHTML;
+                    var img = document.getElementById("post").src;
+                    var rating = 0;
+                    var sql = 'INSERT INTO watched (title, mid, year, poster, ratings) VALUES (?,?,?,?,?)';
+                    tx.executeSql(sql, [title, id, year, img, rating]);
+                });
+
+            } else {
+                db.transaction(function(tx) {
+                    $$('.open-preloader');
+                    app.dialog.preloader('Removing from Watched List');
+                    setTimeout(function() {
+                        app.dialog.close();
+                    }, 3000);
+                    var title = document.getElementById('mti').innerHTML;
+                    var year = document.getElementById('mye').innerHTML;
+                    var sql = 'DELETE FROM watched WHERE title = ? and year = ?';
+                    tx.executeSql(sql, [title, year]);
+                });
+
+            }
+        });
+
+        $(document).ready(function() {
+            $("form#ratingForm").submit(function(e) {
+                e.preventDefault(); // prevent the default click action from being performed
+                if ($("#ratingForm :radio:checked").length == 0) {
+                    $('#status').html("nothing checked");
+                    return false;
+                } else {
+                    var rating = $('input:radio[name=rating]:checked').val();
+                    $$('.open-preloader');
+                    app.dialog.preloader('Giving ' + rating + ' Star Rating to this Movie');
+                    setTimeout(function() {
+                        app.dialog.close();
+                    }, 3000);
+                    db.transaction(function(tx) {
+                        var title = document.getElementById('mti').innerHTML;
+                        var year = document.getElementById('mye').innerHTML;
+                        var rating = $('input:radio[name=rating]:checked').val();
+                        var sql = 'UPDATE watched SET ratings =? WHERE title = ? and year = ?';
+                        tx.executeSql(sql, [rating, title, year]);
+                    });
+                }
+            });
+        });
+
+        $$('#toggle-green').on('change', function() {
+            if ($$('#toggle-green').prop('checked') == true) {
+                $$('.open-preloader');
+                app.dialog.preloader('Moving to Favorite List');
+                setTimeout(function() {
+                    app.dialog.close();
+                }, 3000);
+                db.transaction(function(tx) {
+                    var title = document.getElementById('mti').innerHTML;
+                    var year = document.getElementById('mye').innerHTML;
+                    var id = document.getElementById('mid').innerHTML;
+                    var img = document.getElementById("post").src;
+                    var sql = 'INSERT INTO bookmarks (title, mid, year, poster) VALUES (?,?,?,?)';
+                    tx.executeSql(sql, [title, id, year, img]);
+                });
+
+            } else {
+                db.transaction(function(tx) {
+                    $$('.open-preloader');
+                    app.dialog.preloader('Removing from Favorite List');
+                    setTimeout(function() {
+                        app.dialog.close();
+                    }, 3000);
+                    var title = document.getElementById('mti').innerHTML;
+                    var year = document.getElementById('mye').innerHTML;
+                    var sql = 'DELETE FROM bookmarks WHERE title = ? and year = ?';
+                    tx.executeSql(sql, [title, year]);
+                });
+            }
+        });
+
+
+        function valid() {
+            if ($("#smovie").val() == "") {
+                $$('.open-alert');
+                app.dialog.alert("Search cannot be empty!", 'Movie API');
+            } else {
+
+                var mainView = app.views.create('.view-main');
+                mainView.router.navigate('/about/');
+            }
+
+        }
+
+
+        $$(document).on('page:init', '.page[data-name="about"]', function(e) {
+            var str = $("#smovie").val();
+            $.getJSON("http://www.omdbapi.com/?apikey=be60c654&s=" + str).then(
+                function(response) {
+                    var txt = "";
+                    var stxt = "";
+                    var res = response.Response;
+                    for (x in response.Search) {
+                        var count = response.totalResults;
+                        var image = "";
+                        if (response.Search[x].Poster == "N/A") {
+                            image = "img/default.png";
+                        } else {
+                            image = response.Search[x].Poster;
+                        }
+
+                        txt += "<div class='card' style='border-radius: 15px 50px 30px;box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.2), 0 6px 20px 0 rgba(255, 255, 255, 0.19);'><div class='card-content'><a href='#' onclick=\"myFunction('" + response.Search[x].imdbID + "')\" class='popup-open' data-popup='.demo-popup'><div style='height: 500px; border-radius: 25px; background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.4542191876750701) 0%, rgba(0,0,0,0.44861694677871145) 50%), url(" + image + "); background-size: cover;'><div class='card-header text-color-white display-block'><br/><b><span id='span_id'>" + response.Search[x].Title + "</span><p style='opacity: 0.7'>Year: " + response.Search[x].Year + "</p><p style='opacity: 0.7'>Type: " + response.Search[x].Type + "</p></b></div></div></a></div></div>";
+                        stxt += "<option value='" + response.Search[x].Year + "'>" + response.Search[x].Year + "</option>";
+                    }
+
+                    document.getElementById("easyPaginate").innerHTML = txt;
+                    document.getElementById("syear").innerHTML += stxt;
+                    //alert(res);
+                    if (res == "False") {
+                        $$('.open-alert');
+                        app.dialog.alert("Movie not found!", 'Movie API');
+
+                    } else {
+                        $$('.open-alert');
+                        app.dialog.alert("Number of Movies found: " + count, 'Movie API');
+                    }
+
+
+                });
+
+        })
+
+        function myseason(name) {
+
+            app.popover.close('.popover-links', true);
+            $.getJSON("http://www.omdbapi.com/?apikey=be60c654&i=" + name).then(
+                function(response) {
+                    var txt = "";
+                    var seatxt = "<h2 style='color: #DAA520;'>" + response.Title + "</h2><p style='color: orange;'>Season: " + response.Season + "</p>";
+                    for (x in response.Episodes) {
+                        txt += "<div class='accordion-item'><div class='accordion-item-toggle'><i class='icon icon-plus'>+</i><i class='icon icon-minus'>-</i><span>Episode " + response.Episodes[x].Episode + "</span></div><div class='accordion-item-content'><p>" + response.Episodes[x].Title + "</p><p>Date Released: " + response.Episodes[x].Released + "</p><p>IMDB Rating: " + response.Episodes[x].imdbRating + "</p><div class='row'><div class='col'></div><div class='col'></div><div class='col'><button class='col button button-fill button-round' onclick=\"episode('" + name + "&episode=" + response.Episodes[x].Episode + "')\">Details</button></div></div></div></div>";
+
+
+                    }
+                    document.getElementById("ep").innerHTML = txt;
+                    document.getElementById("sea").innerHTML = seatxt;
+
+                });
+            app.popup.open('.second-popup', true);
+        }
+
+        function episode(name) {
+
+            $.getJSON("http://www.omdbapi.com/?apikey=be60c654&i=" + name).then(
+                function(response) {
+                    var txt = "";
+                    var seatxt = "<h2 style='color: #DAA520;'>" + response.Title + "  - " + response.Runtime + "</h2><p style='color: orange;'>Season: " + response.Season + " / Episode: " + response.Episode + "</p>";
+
+                    txt += "<div class='block'><div><img src='" + response.Poster + "' width='100%' style='border-radius: 15px 50px 30px;'/></div></div><p>" + response.Plot + "</p><p>Director: " + response.Director + "</p><p>Director: " + response.Writer + "</p><p>Actors: " + response.Actors + "</p>";
+
+
+
+                    document.getElementById("p").innerHTML = txt;
+                    document.getElementById("e").innerHTML = seatxt;
+
+                });
+            app.popup.open('.third-popup', true);
+        }
+
+        function myFunction(name) {
+
+            $.getJSON("http://www.omdbapi.com/?apikey=be60c654&plot=full&i=" + name).then(
+                function(response) {
+                    var txt1 = "";
+                    var txt2 = "";
+                    if (response.Type == 'series') {
+                        var non = "style='display:none;'";
+                        var ini = "<p><a class='link popover-open' href='#' data-popover='.popover-links'>Seasons: " + response.totalSeasons + "</a></p>";
+                        var yy = 1;
+                        var zz = 1;
+                        for (var i = 0; i < response.totalSeasons; i++) {
+
+                            txt2 += "<li><a class='popup-open list-button item-link' popup='.second-popup' onclick=\"myseason('" + name + "&season=" + (yy++) + "')\" href='#'>Season " + (zz++) + "</a></li>";
+                        }
+
+                        document.getElementById("ls").innerHTML = txt2;
+                    } else {
+                        var non = "";
+                        var ini = "";
+
+                    }
+                    var image = "";
+                    if (response.Poster == "N/A") {
+                        image = "img/default.png";
+                    } else {
+                        image = response.Poster;
+                    }
+                    txt1 = "<div class='row'><div class='col-50'><img id='post' src='" + image + "' style='width: 100%; border-radius: 8px;'></div><div class='col-50'><h3 id='mti' class='glow'>" + response.Title + "</h3><h3 id='mid' style='display:none;'>" + response.imdbID + "</h3><p>Year: <span id='mye'>" + response.Year + "</span></p><p>Rated: " + response.Rated + "</p><p>Date Released: " + response.Released + "</p><p>Runtime: " + response.Runtime + "</p></div></div><p style='text-align: justify;'>" + response.Plot + "</p><p>Genre: " + response.Genre + "</p><p " + non + ">Director: " + response.Director + "</p><p>Writer: " + response.Writer + "</p><p>Actors: " + response.Actors + "</p><p>Awards: " + response.Awards + "</p><p>IMDB Rating: " + response.imdbRating + "</p><progress id='file' value='" + (response.imdbRating) * 10 + "' max='100'>" + response.imdbRating + "</progress><p>IMDB Votes: " + response.imdbVotes + "</p><p " + non + ">Box Office: <span style='color: #DAA520;'>" + response.BoxOffice + "</span></p>" + ini;
+
+                    document.getElementById("back").setAttribute('style', 'background-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6979166666666667) 0%, rgba(0,0,0,0.6951155462184874) 50%), url(' + image + '); background-size: cover;');
+                    document.getElementById("back1").setAttribute('style', 'background-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6979166666666667) 0%, rgba(0,0,0,0.6951155462184874) 50%), url(' + image + '); background-size: cover;');
+                    document.getElementById("back2").setAttribute('style', 'background-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6979166666666667) 0%, rgba(0,0,0,0.6951155462184874) 50%), url(' + image + '); background-size: cover;');
+                    document.getElementById("dd").innerHTML = txt1;
+                });
+            window.setTimeout(timing, 1000);
+
+            function timing() {
+                db.transaction(function(tx) {
+                    var title1 = document.getElementById('mti').innerHTML;
+                    var year1 = document.getElementById('mye').innerHTML;
+
+                    tx.executeSql('SELECT * FROM watched', [], function(tx, results1) {
+                        var len1 = results1.rows.length,
+                            j;
+                        for (j = 0; j < len1; j++) {
+                            if (results1.rows.item(j).title == title1 && results1.rows.item(j).year == year1) {
+
+                                $('[name="demo-checkbox-movies"]').prop('checked', true);
+                                break;
+                            } else {
+                                $('[name="demo-checkbox-movies"]').prop('checked', false);
+
+                            }
+                        }
+                    }, null);
+                });
+            }
+
+            window.setTimeout(timing1, 1000);
+
+            function timing1() {
+                db.transaction(function(tx) {
+                    var title1 = document.getElementById('mti').innerHTML;
+                    var year1 = document.getElementById('mye').innerHTML;
+                    tx.executeSql('SELECT * FROM bookmarks', [], function(tx, results1) {
+                        var len1 = results1.rows.length,
+                            j;
+                        for (j = 0; j < len1; j++) {
+                            if (results1.rows.item(j).title == title1 && results1.rows.item(j).year == year1) {
+                                //alert("eee");
+                                $('[name="mm"]').prop('checked', true);
+                                break;
+                            } else {
+                                $('[name="mm"]').prop('checked', false);
+                            }
+                        }
+                    }, null);
+                });
+            }
+        }
+
+        $$(document).on('page:init', '.page[data-name="boook"]', function(e) {
+            db.transaction(function(tx) {
+                tx.executeSql('SELECT * FROM bookmarks', [], function(tx, results1) {
+                    var len1 = results1.rows.length,
+                        j;
+                    var txt = "";
+                    for (j = 0; j < len1; j++) {
+                        txt += "<div class='card' style='border-radius: 15px 50px 30px;'><div class='card-content'><a href='#' onclick=\"myFunction('" + results1.rows.item(j).title + "')\" class='popup-open' data-popup='.demo-popup'><div style='height: 500px; border-radius: 25px; background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.4542191876750701) 0%, rgba(0,0,0,0.44861694677871145) 50%), url(" + results1.rows.item(j).poster + "); background-size: cover;'><div class='card-header text-color-white display-block'><br/><b><span id='span_id'>" + results1.rows.item(j).title + "</span><p style='opacity: 0.7'>Year: " + results1.rows.item(j).year + "</p></b></div></div></a></div></div>";
+                    }
+                    document.getElementById("book").innerHTML = txt;
+                    setTimeout(function() {
+                        if ($('.card').length == 0) {
+                            $$('.open-alert');
+                            app.dialog.alert("No Items has been added", 'Movie API');
+                        }
+                    }, 1000);
+
+
+
+                }, null);
+            });
+        })
+
+        $$(document).on('page:init', '.page[data-name="watched"]', function(e) {
+            db.transaction(function(tx) {
+                tx.executeSql('SELECT * FROM watched', [], function(tx, results1) {
+                    var len1 = results1.rows.length,
+                        j;
+                    var txt = "";
+                    for (j = 0; j < len1; j++) {
+                        if (results1.rows.item(j).ratings == 0) {
+                            var r0 = "display: none;";
+                            var r2 = "";
+                            var r3 = "";
+                            var r4 = "";
+                            var r5 = "";
+                            var r1 = "";
+                        } else if (results1.rows.item(j).ratings == 1) {
+                            var r1 = "checked";
+                            var r2 = "";
+                            var r3 = "";
+                            var r4 = "";
+                            var r5 = "";
+                            var r0 = "";
+                        } else if (results1.rows.item(j).ratings == 2) {
+                            var r2 = "checked";
+                            var r0 = "";
+                            var r3 = "";
+                            var r4 = "";
+                            var r5 = "";
+                            var r1 = "";
+                        } else if (results1.rows.item(j).ratings == 3) {
+                            var r3 = "checked";
+                            var r2 = "";
+                            var r0 = "";
+                            var r4 = "";
+                            var r5 = "";
+                            var r1 = "";
+                        } else if (results1.rows.item(j).ratings == 4) {
+                            var r4 = "checked";
+                            var r2 = "";
+                            var r3 = "";
+                            var r0 = "";
+                            var r5 = "";
+                            var r1 = "";
+                        } else if (results1.rows.item(j).ratings == 5) {
+                            var r5 = "checked";
+                            var r2 = "";
+                            var r3 = "";
+                            var r4 = "";
+                            var r0 = "";
+                            var r1 = "";
+                        }
+                        txt += "<div class='card' style='border-radius: 15px 50px 30px;'><div class='card-content'><a href='#' onclick=\"myFunction('" + results1.rows.item(j).mid + "')\" class='popup-open' data-popup='.demo-popup'><div style='height: 500px; border-radius: 25px; background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.4542191876750701) 0%, rgba(0,0,0,0.44861694677871145) 50%), url(" + results1.rows.item(j).poster + "); background-size: cover;'><div class='card-header text-color-white display-block'><br/><b><span id='span_id'>" + results1.rows.item(j).title + "</span><p style='opacity: 0.7'>Year: " + results1.rows.item(j).year + "</p></b><div style='" + r0 + "'><form><fieldset class='rating' style='border:none;'><input type='radio' " + r5 + " /><label for='star5' title='Rocks!'>5 stars</label><input type='radio' " + r4 + " /><label for='star4' title='Pretty good' >4 stars</label><input type='radio' " + r3 + " /><label for='star3' title='Meh'>3 stars</label><input type='radio' " + r2 + " /><label for='star2' title='Kinda bad'>2 stars</label><input type='radio' " + r1 + " /><label for='star1' title='Sucks big time' >1 star</label></fieldset><div class='clearfix'></div></form></div></div></div></a></div></div>";
+                    }
+                    document.getElementById("wat").innerHTML = txt;
+                    setTimeout(function() {
+                        if ($('.card').length == 0) {
+                            $$('.open-alert');
+                            app.dialog.alert("No Items has been added", 'Movie API');
+                        }
+                    }, 1000);
+
+                }, null);
+            });
+        })
+
+
+        function OnGradeChanged(value) {
+            var str = $("#smovie").val();
+            $.getJSON("http://www.omdbapi.com/?apikey=be60c654&s=" + str + "&y=" + value).then(
+                function(response) {
+                    var txt = "";
+                    for (x in response.Search) {
+                        txt += "<div class='card' style='border-radius: 15px 50px 30px;'><div class='card-content'><a href='#' onclick=\"myFunction('" + response.Search[x].mid + "')\" class='popup-open' data-popup='.demo-popup'><div style='height: 500px; border-radius: 25px; background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.4542191876750701) 0%, rgba(0,0,0,0.44861694677871145) 50%), url(" + response.Search[x].Poster + "); background-size: cover;'><div class='card-header text-color-white display-block'><br/><b><span id='span_id'>" + response.Search[x].Title + "</span><p style='opacity: 0.7'>Year: " + response.Search[x].Year + "</p><p style='opacity: 0.7'>Type: " + response.Search[x].Type + "</p></b></div></div></a></div></div>";
+                    }
+                    document.getElementById("easyPaginate").innerHTML = "";
+                    document.getElementById("easyPaginate").innerHTML = txt;
+                });
+        }
+
+        function OnChanged(value) {
+            var str = $("#smovie").val();
+            $.getJSON("http://www.omdbapi.com/?apikey=be60c654&s=" + str + "&type=" + value).then(
+                function(response) {
+                    var txt = "";
+                    for (x in response.Search) {
+                        txt += "<div class='card' style='border-radius: 15px 50px 30px;'><div class='card-content'><a href='#' onclick=\"myFunction('" + response.Search[x].Title + "')\" class='popup-open' data-popup='.demo-popup'><div style='height: 500px; border-radius: 25px; background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.4542191876750701) 0%, rgba(0,0,0,0.44861694677871145) 50%), url(" + response.Search[x].Poster + "); background-size: cover;'><div class='card-header text-color-white display-block'><br/><b><span id='span_id'>" + response.Search[x].Title + "</span><p style='opacity: 0.7'>Year: " + response.Search[x].Year + "</p><p style='opacity: 0.7'>Type: " + response.Search[x].Type + "</p></b></div></div></a></div></div>";
+                    }
+                    document.getElementById("easyPaginate").innerHTML = "";
+                    document.getElementById("easyPaginate").innerHTML = txt;
+                });
+        }
+
+    </script>
+
+    <script>
+        var sendlg = function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+
+            function showPosition(position) {
+                //$$('.open-alert');
+                // app.dialog.alert("Latitude: " + position.coords.latitude +"<br>Longitude: " + position.coords.longitude, 'Movie API');
+
+                var qt1 = $("[name='qtitle1']").val();
+                var qd1 = $("[name='qdesc1']").val();
+                Email.send({
+                        Host: "smtp.gmail.com",
+                        Username: "riverbay06@gmail.com",
+                        Password: "riverbay_2020",
+                        To: "chandeshlillmond06@gmail.com",
+                        From: "riverbay06@gmail.com",
+                        Subject: 'Movie API',
+                        Body: 'Hello I am ' + qt1 + ', My feedback is: <br/>' + qd1 + "<br/>Location:https://www.google.mu/maps/@" + position.coords.latitude + "," + position.coords.longitude + ",21z",
+                    })
+                    .then(function(message) {
+                        $$('.open-alert');
+                        app.dialog.alert('Feedback sent Successfully', 'Movie API');
+                    });
+            }
+        }
+
+        var clear1 = function() {
+
+            $("#qtitle1").val("");
+            $("#qdesc1").val("");
+        }
+
+    </script>
+
+</body>
+
+</html>
